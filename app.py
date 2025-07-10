@@ -45,6 +45,10 @@ def get_ingredient():
 def home():
     return "프록시 서버가 정상 작동 중입니다."
 
+import os  # 👈 환경변수를 불러오기 위해 추가
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000, debug=True)
+    port = int(os.environ.get("PORT", 5000))  # Render가 자동 설정하는 PORT 사용
+    app.run(host="0.0.0.0", port=port, debug=True)
+
 
