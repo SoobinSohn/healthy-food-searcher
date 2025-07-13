@@ -1,33 +1,24 @@
+from flask import Flask, request, jsonify
+import requests
+import ssl
+from requests.adapters import HTTPAdapter
+from urllib3.poolmanager import PoolManager
+import os
+
+app = Flask(__name__)  # ⭐️ 반드시 제일 위에 있어야 함
+
+# 이하 기존 코드 계속...
+
+# 예시 라우터
 @app.route("/ingredient", methods=["GET"])
 def get_ingredient():
-    page_no = request.args.get("pageNo", "1")
-    num_of_rows = request.args.get("numOfRows", "10")
-    resp_type = request.args.get("type", "json")  # json 또는 xml
+    # 코드 생략
+    pass
 
-    # 👉추가: 제품명/업체명 파라미터도 받기
-    prduct = request.args.get("PRDUCT")
-    entrps = request.args.get("ENTRPS")
+@app.route("/")
+def home():
+    return "프록시 서버가 정상 작동 중입니다."
 
-    session = requests.Session()
-    session.mount("https://", TLSAdapter())
-
-    params = {
-        "ServiceKey": SERVICE_KEY,
-        "pageNo": page_no,
-        "numOfRows": num_of_rows,
-        "type": resp_type
-    }
-    if prduct:
-        params["PRDUCT"] = prduct
-    if entrps:
-        params["ENTRPS"] = entrps
-
-    try:
-        res = session.get(BASE_URL, params=params, timeout=10)
-        res.raise_for_status()
-        if resp_type == "json":
-            return jsonify(res.json())
-        else:
-            return res.text, 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=True)
